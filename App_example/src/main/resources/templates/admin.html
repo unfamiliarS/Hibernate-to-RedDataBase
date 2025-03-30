@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+    
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" th:href="@{/css/top_user_menu.css}">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 
+            Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+        }
+        html, body {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            background-color: #f5f5f5;
+            padding-top: 10px;
+        }
+
+        .main-content {
+            flex: 1;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+
+        .admin-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        .admin-table th, .admin-table td {
+            border: 1px solid #555;
+            padding: 8px;
+            text-align: center;
+        }
+
+        .admin-table th {
+            background-color: #dad7d7;
+        }
+
+        .admin-table tr:nth-child(even) {
+            background-color: #f5f5f5;
+        }
+
+        .admin-table button {
+            width: 100%;
+            padding: 10px 20px;
+            background-color: #555;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .admin-table button:hover {
+            background-color: #333;
+        }
+    </style>
+</head>
+<body>
+    <div class="top-bar">
+        <div class="home-user">
+            <a href="/" class="home-button">
+                <button>
+                    <img th:src="@{/images/home.svg}" alt="home">
+                </button>
+            </a>
+            <div class="user-info" id="user-info">
+                <span id="user-login" class="user-login" th:text="${username}"></span>
+                <div class="dropdown-content" id="dropdown-content">
+                    <a th:if="${isAdmin}" th:href="@{/admin}">Просмотр данных о пользователях</a>
+                    <a th:href="@{/passwd}">Сменить пароль</a>
+                    <a th:href="@{/logout}">Выйти</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="main-content">
+        <table class="admin-table">
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>Имя пользователя</th>
+                <th>Пароль</th>
+                <th>Роли</th>
+                <th>Действия</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="user : ${allUsers}">
+                <td th:text="${user.id}"></td>
+                <td th:text="${user.username}"></td>
+                <td th:text="${user.password}"></td>
+                <td>
+                <span th:each="role : ${user.roles}" th:text="${role.name} + '; '"></span>
+                </td>
+                <td>
+                <form th:action="@{/admin}" method="post">
+                    <input type="hidden" name="userId" th:value="${user.id}"/>
+                    <input type="hidden" name="action" value="delete"/>
+                    <button type="submit">Удалить</button>
+                </form>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <script th:src="@{/js/dropdown_menu.js}"></script>
+</body>
+</html>
